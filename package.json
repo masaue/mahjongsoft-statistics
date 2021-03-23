@@ -19,6 +19,9 @@
     "url": "https://github.com/masaue/mahjongsoft-statistics/issues"
   },
   "homepage": "https://github.com/masaue/mahjongsoft-statistics#readme",
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  },
   "devDependencies": {
     "@types/node": "^14.14.35",
     "ts-node": "^9.1.1",

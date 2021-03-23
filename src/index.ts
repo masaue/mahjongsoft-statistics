@@ -1,4 +1,6 @@
-import Greeter from './Greeter'
+import Scraper from './scraper';
 
-const greeter = new Greeter('masaue', 'mahjongsoft-statistics')
-greeter.sayHello()
+(() => {
+  const scraper = new Scraper();
+  scraper.initialize();
+})();
