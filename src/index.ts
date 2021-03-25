@@ -1,6 +1,7 @@
 import Scraper from './scraper';
 
-(() => {
+(async () => {
   const scraper = new Scraper();
-  scraper.initialize();
+  await scraper.initialize();
+  await scraper.statistics();
 })();
