@@ -20,10 +20,12 @@
   },
   "homepage": "https://github.com/masaue/mahjongsoft-statistics#readme",
   "dependencies": {
-    "puppeteer": "^8.0.0"
+    "puppeteer": "^8.0.0",
+    "readline-sync": "^1.4.10"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
+    "@types/readline-sync": "^1.4.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   },
