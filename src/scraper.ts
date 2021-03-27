@@ -6,16 +6,14 @@ export default class Scraper {
   private readonly LOGIN = 'https://mahjongsoft.com/_login.php';
   private page!: puppeteer.Page;
 
-  constructor () {}
-
-  async initialize() {
-    const browser = await puppeteer.launch({headless: false});
+  async initialize(): Promise<void> {
+    const browser = await puppeteer.launch({ headless: false });
     const pages = await browser.pages();
-    this.page = pages[0];
+    [this.page] = pages;
     await this.gotoTarget();
   }
 
-  async statistics(login: string, password: string) {
+  async statistics(login: string, password: string): Promise<void> {
     await this.login(login, password);
     await this.showMySessions();
   }
@@ -27,9 +25,9 @@ export default class Scraper {
     ]);
     // for hiding login modal
     await Promise.all([
-      //this.page.waitForFunction('document.getElementById("navbar_text").value !== "Offline"'),
-      //this.page.waitForSelector('#loginModal', {visible: false}),
-      //this.page.waitForSelector('#logout_button', {visible: true}),
+      // this.page.waitForFunction('document.getElementById("navbar_text").value !== "Offline"'),
+      // this.page.waitForSelector('#loginModal', {visible: false}),
+      // this.page.waitForSelector('#logout_button', {visible: true}),
       // TODO use another waitforXXXX()
       this.page.waitForTimeout(1000),
       this.page.click('#sessionsShowButton'),
@@ -65,7 +63,7 @@ export default class Scraper {
 
   private async showLoginModal() {
     await Promise.all([
-      this.page.waitForSelector('#loginModal', {visible: true}),
+      this.page.waitForSelector('#loginModal', { visible: true }),
       this.page.click('#login_form_button'),
     ]);
   }
