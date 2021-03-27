@@ -16,6 +16,7 @@ export default class Scraper {
   async statistics(login: string, password: string): Promise<void> {
     await this.login(login, password);
     await this.showMySessions();
+    console.log(await this.sessionTextContents());
   }
 
   private async clickLoginButton() {
@@ -66,5 +67,17 @@ export default class Scraper {
       this.page.waitForSelector('#loginModal', { visible: true }),
       this.page.click('#login_form_button'),
     ]);
+  }
+
+  private sessionTextContents() {
+    // copied from https://officeforest.org/wp/2020/04/27/puppeteerでテーブルデータを取得する/
+    return this.page.evaluate(() => {
+      // eslint-disable-next-line no-undef
+      const rows = document.querySelectorAll('#table_sessions tbody tr');
+      return Array.from(rows, (row) => {
+        const columns = row.querySelectorAll('td');
+        return Array.from(columns, (column) => column.textContent);
+      });
+    });
   }
 }
