@@ -13,9 +13,8 @@ export default class Scraper {
     await this.gotoTarget();
   }
 
-  async statistics(login: string): Promise<void> {
-    const records = await this.records(login);
-    console.log(records);
+  async statistics(login: string): Promise<{}[]> {
+    return this.records(login);
   }
 
   close() {
