@@ -16,6 +16,8 @@ export default class Scraper {
 
   async statistics(login: string, password: string): Promise<void> {
     await this.login(login, password);
+    const records = await this.records(login);
+    console.log(records);
   }
 
   close() {
@@ -31,7 +33,29 @@ export default class Scraper {
 
   private async login(login: string, password: string) {
     const query = `login=${login}&password=${password}&rememberme=0`;
-    console.log(await this.put(this.LOGIN, query));
+    await this.put(this.LOGIN, query);
+  }
+
+  private async records(login: string) {
+    const query = Scraper.recordsSomeOneQuery(login, 0);
+    const { numrecords, records } = await this.put(this.SCRIPT, query);
+    const offsets = Array(Math.floor(numrecords / 50))
+      .fill(0)
+      .map((_, index) => { return (index + 1) * 50; });
+    return records.length === 0 ? records : [...records,
+      ...(await this.recordsWithOffsets(login, offsets)).flat()];
+  }
+
+  private async recordsWithOffsets(login: string, offsets: number[]) {
+    const sessions = await Promise.all(offsets.map((offset) => {
+      const query = Scraper.recordsSomeOneQuery(login, offset);
+      return this.put(this.SCRIPT, query);
+    }));
+    return sessions.map((session) => { return session.records; });
+  }
+
+  private static recordsSomeOneQuery(login: string, offset: number) {
+    return `offset=${offset}&limit=50&order=1&needrecords=1&type=MCR&order=1&maxbots=2&with=${login}`;
   }
 
   private put(path: string, query: string) {
