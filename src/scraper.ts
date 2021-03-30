@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 export default class Scraper {
   private readonly TARGET = 'https://mahjongsoft.com/sessions.php';
   private readonly SCRIPT = 'https://mahjongsoft.com/_sessions.php';
-  private readonly LOGIN = 'https://mahjongsoft.com/_login.php';
+  private readonly LOGIN = '_login.php';
   private page!: puppeteer.Page;
 
   async initialize(): Promise<void> {
@@ -15,29 +15,6 @@ export default class Scraper {
 
   async statistics(login: string, password: string): Promise<void> {
     await this.login(login, password);
-    await this.showMySessions();
-    console.log(await this.sessionTextContents());
-  }
-
-  private async clickLoginButton() {
-    await Promise.all([
-      this.page.waitForResponse(this.LOGIN),
-      this.page.click('#login_button'),
-    ]);
-    // for hiding login modal
-    await Promise.all([
-      // this.page.waitForFunction('document.getElementById("navbar_text").value !== "Offline"'),
-      // this.page.waitForSelector('#loginModal', {visible: false}),
-      // this.page.waitForSelector('#logout_button', {visible: true}),
-      // TODO use another waitforXXXX()
-      this.page.waitForTimeout(1000),
-      this.page.click('#sessionsShowButton'),
-    ]);
-  }
-
-  private async fillLoginAndPassword(login: string, password: string) {
-    await this.page.type('#loginLoginInput', login);
-    await this.page.type('#loginPasswordInput', password);
   }
 
   private async gotoTarget() {
@@ -48,36 +25,22 @@ export default class Scraper {
   }
 
   private async login(login: string, password: string) {
-    await this.showLoginModal();
-    await this.fillLoginAndPassword(login, password);
-    await this.clickLoginButton();
+    const query = `login=${login}&password=${password}&rememberme=0`;
+    console.log(await this.put(this.LOGIN, query));
   }
 
-  private async showMySessions() {
-    await this.page.click('#sessionsLastWeekCheck');
-    await this.page.click('#sessionsWithMeCheck');
-    await Promise.all([
-      this.page.waitForResponse(this.SCRIPT),
-      this.page.click('#sessionsShowButton'),
-    ]);
-  }
-
-  private async showLoginModal() {
-    await Promise.all([
-      this.page.waitForSelector('#loginModal', { visible: true }),
-      this.page.click('#login_form_button'),
-    ]);
-  }
-
-  private sessionTextContents() {
-    // copied from https://officeforest.org/wp/2020/04/27/puppeteerでテーブルデータを取得する/
-    return this.page.evaluate(() => {
+  private put(path: string, query: string) {
+    // copied from https://github.com/puppeteer/puppeteer/issues/592#issuecomment-325752748
+    return this.page.evaluate(async (input, body) => {
       // eslint-disable-next-line no-undef
-      const rows = document.querySelectorAll('#table_sessions tbody tr');
-      return Array.from(rows, (row) => {
-        const columns = row.querySelectorAll('td');
-        return Array.from(columns, (column) => column.textContent);
+      const response = await fetch(input, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body,
       });
-    });
+      return response.json();
+    }, path, query);
   }
 }

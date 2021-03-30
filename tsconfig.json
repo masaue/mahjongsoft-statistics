@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "target": "ES2015",
+    "target": "es2018",
     "outDir": "./dist",
     "declaration": true,
     "declarationDir": "./dist/__types__",
