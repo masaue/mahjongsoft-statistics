@@ -3,7 +3,6 @@ import puppeteer from 'puppeteer';
 export default class Scraper {
   private readonly TARGET = 'https://mahjongsoft.com/sessions.php';
   private readonly SCRIPT = 'https://mahjongsoft.com/_sessions.php';
-  private readonly LOGIN = '_login.php';
   private browser!: puppeteer.Browser;
   private page!: puppeteer.Page;
 
@@ -14,8 +13,7 @@ export default class Scraper {
     await this.gotoTarget();
   }
 
-  async statistics(login: string, password: string): Promise<void> {
-    await this.login(login, password);
+  async statistics(login: string): Promise<void> {
     const records = await this.records(login);
     console.log(records);
   }
@@ -29,11 +27,6 @@ export default class Scraper {
       this.page.waitForResponse(this.SCRIPT),
       this.page.goto(this.TARGET),
     ]);
-  }
-
-  private async login(login: string, password: string) {
-    const query = `login=${login}&password=${password}&rememberme=0`;
-    await this.put(this.LOGIN, query);
   }
 
   private async records(login: string) {
