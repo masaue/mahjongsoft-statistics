@@ -15,6 +15,7 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "arrow-body-style": "off",
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "lines-between-class-members": "off"
