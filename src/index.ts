@@ -9,4 +9,5 @@ import Scraper from './scraper';
   const scraper = new Scraper();
   await scraper.initialize();
   await scraper.statistics(login, password);
+  scraper.close();
 })();

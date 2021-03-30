@@ -4,17 +4,22 @@ export default class Scraper {
   private readonly TARGET = 'https://mahjongsoft.com/sessions.php';
   private readonly SCRIPT = 'https://mahjongsoft.com/_sessions.php';
   private readonly LOGIN = '_login.php';
+  private browser!: puppeteer.Browser;
   private page!: puppeteer.Page;
 
   async initialize(): Promise<void> {
-    const browser = await puppeteer.launch({ headless: false });
-    const pages = await browser.pages();
+    this.browser = await puppeteer.launch();
+    const pages = await this.browser.pages();
     [this.page] = pages;
     await this.gotoTarget();
   }
 
   async statistics(login: string, password: string): Promise<void> {
     await this.login(login, password);
+  }
+
+  close() {
+    this.browser.close();
   }
 
   private async gotoTarget() {
