@@ -41,7 +41,7 @@ export default class Records {
    */
   private readonly records: {};
 
-  constructor(private readonly login: string) {
+  constructor(private readonly login: string, private readonly forceScrape: boolean) {
     try {
       this.records = JSON.parse(fs.readFileSync(Records.RECORDS_PATH, 'utf8'));
     } catch {
@@ -50,7 +50,7 @@ export default class Records {
   }
 
   async initialize() {
-    if (!this.records[this.login]) {
+    if (!this.records[this.login] || this.forceScrape) {
       this.records[this.login] = await this.scrape();
       if (this.records[this.login].length !== 0) {
         fs.writeFileSync(Records.RECORDS_PATH, JSON.stringify(this.records, null, 2));

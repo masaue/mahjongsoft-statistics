@@ -2,12 +2,12 @@
   "name": "mahjongsoft-statistics",
   "version": "1.0.0",
   "description": "statistics for https://mahjongsoft.com",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "scripts": {
     "build": "ts-node ./tasks/run-build.ts",
     "build:dev": "ts-node --project ./tsconfig-dev.json ./tasks/run-build.ts -d",
     "release": "ts-node ./tasks/run-release.ts",
-    "start": "node ./dist/index.js",
+    "start": "node ./dist/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/masaue/mahjongsoft-statistics",
@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/masaue/mahjongsoft-statistics#readme",
   "dependencies": {
-    "puppeteer": "^8.0.0",
-    "readline-sync": "^1.4.10"
+    "commander": "^7.2.0",
+    "puppeteer": "^8.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
