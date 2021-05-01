@@ -1,5 +1,7 @@
+import Records from './records';
+
 export default class Statistics {
-  constructor(private readonly login: string, private readonly records: {}[]) {
+  constructor(private readonly records: Records) {
   }
 
   show() {
@@ -10,13 +12,8 @@ export default class Statistics {
     console.log(`total: ${this.records.length}`);
   }
 
-  private rankCount(rank: number) {
-    const key = `player${rank - 1}`;
-    return this.records.filter((record) => { return record[key] === this.login; }).length;
-  }
-
   private showRanking(rank: number) {
-    const rankCount = this.rankCount(rank);
+    const rankCount = this.records.rankCount(rank);
     const { length } = this.records;
     console.log(`${rank}: ${((rankCount / length) * 100).toFixed(2)}% (${rankCount}/${length})`);
   }
